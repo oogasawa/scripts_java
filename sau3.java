@@ -1,5 +1,5 @@
 //usr/bin/env jbang "$0" "$@" ; exit $?
-//DEPS com.github.oogasawa:Utility-sau3:1.1.0
+//DEPS com.github.oogasawa:Utility-sau3:1.5.0
 
 class sau3 {
   public static void main(String[] args) throws Exception {
