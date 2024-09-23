@@ -1,4 +1,4 @@
-bang "$0" "$@" ; exit $?
+//usr/bin/env jbang "$0" "$@" ; exit $?
 //DEPS com.github.oogasawa:Utility-eng:4.0.0
 
 class eng {
