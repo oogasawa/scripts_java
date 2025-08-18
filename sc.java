@@ -3,9 +3,9 @@
 import java.io.File;
 import java.net.URLClassLoader;
 
-class cli {
+class sc {
 
-  static String fatJar = "/works/Utility-cli/target/Utility-cli-3.0.0-fat.jar";
+  static String fatJar = "/works/Utility-sc/target/Utility-sc-2.2.0-fat.jar";
 
   public static void main(String[] args) throws Exception {
     // Get the user's home directory from Java system properties
@@ -19,11 +19,11 @@ class cli {
     // Dynamically add the JAR file to the classpath
     URLClassLoader classLoader = new URLClassLoader(
         new java.net.URL[] { jarFile.toURI().toURL() },
-        cli.class.getClassLoader()
+        sc.class.getClassLoader()
     );
 
     // Load the class and invoke the main method
-    Class<?> appClass = classLoader.loadClass("com.github.oogasawa.utility.cli.App");
+    Class<?> appClass = classLoader.loadClass("com.github.oogasawa.utility.sc.App");
     appClass.getMethod("main", String[].class).invoke(null, (Object) args);
   }
 }
