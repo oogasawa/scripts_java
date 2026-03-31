@@ -1,4 +1,11 @@
-//usr/bin/env jbang "$0" "$@" ; exit $?
+///usr/bin/env jbang "$0" "$@" ; exit $?
+
+// JBang shortcut for Utility-sau3.
+// Loads ~/works/Utility-sau3/target/Utility-sau3-2.1.0.jar at runtime.
+// SAU3 (Sequence Analysis Utilities 3) for bioinformatics sequence processing.
+//
+// Usage:
+//   jbang sau3.java [args...]
 
 import java.io.File;
 import java.net.URLClassLoader;

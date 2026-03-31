@@ -1,4 +1,10 @@
-//usr/bin/env jbang "$0" "$@" ; exit $?
+///usr/bin/env jbang "$0" "$@" ; exit $?
+
+// JBang shortcut for Utility-cli.
+// Loads ~/works/Utility-cli/target/Utility-cli-3.0.0-fat.jar at runtime.
+//
+// Usage:
+//   jbang cli.java [args...]
 
 import java.io.File;
 import java.net.URLClassLoader;

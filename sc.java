@@ -1,4 +1,11 @@
-//usr/bin/env jbang "$0" "$@" ; exit $?
+///usr/bin/env jbang "$0" "$@" ; exit $?
+
+// JBang shortcut for Utility-sc.
+// Loads ~/works/Utility-sc/target/Utility-sc-2.2.0-fat.jar at runtime.
+// SC (Supercomputer) account management utilities.
+//
+// Usage:
+//   jbang sc.java [args...]
 
 import java.io.File;
 import java.net.URLClassLoader;
