@@ -4,6 +4,8 @@
 // Loads ~/works/Utility-sau3/target/Utility-sau3-2.1.0.jar at runtime.
 // SAU3 (Sequence Analysis Utilities 3) for bioinformatics sequence processing.
 //
+// Project: https://github.com/oogasawa/Utility-sau3
+//
 // Usage:
 //   jbang sau3.java [args...]
 

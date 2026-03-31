@@ -4,6 +4,8 @@
 // JBang shortcut for DataCell.
 // Provides DataCell data manipulation utilities.
 //
+// Project: https://github.com/oogasawa/DataCell
+//
 // Usage:
 //   jbang datacell.java [args...]
 

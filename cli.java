@@ -3,6 +3,8 @@
 // JBang shortcut for Utility-cli.
 // Loads ~/works/Utility-cli/target/Utility-cli-3.0.0-fat.jar at runtime.
 //
+// Project: https://github.com/oogasawa/Utility-cli
+//
 // Usage:
 //   jbang cli.java [args...]
 

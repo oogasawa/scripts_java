@@ -4,6 +4,8 @@
 // Loads ~/works/Utility-sc/target/Utility-sc-2.2.0-fat.jar at runtime.
 // SC (Supercomputer) account management utilities.
 //
+// Project: https://github.com/oogasawa/Utility-sc
+//
 // Usage:
 //   jbang sc.java [args...]
 

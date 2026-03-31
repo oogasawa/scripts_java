@@ -4,6 +4,8 @@
 // JBang shortcut for Utility-eng.
 // English text processing utilities.
 //
+// Project: https://github.com/oogasawa/Utility-eng
+//
 // Usage:
 //   jbang eng.java [args...]
 

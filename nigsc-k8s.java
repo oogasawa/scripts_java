@@ -4,6 +4,8 @@
 // JBang shortcut for nigsc-k8s.
 // NIG Supercomputer Kubernetes management utilities.
 //
+// Project: https://github.com/oogasawa/nigsc-k8s
+//
 // Usage:
 //   jbang nigsc-k8s.java [args...]
 

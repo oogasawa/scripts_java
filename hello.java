@@ -4,6 +4,8 @@
 // JBang demo script using jfiglet.
 // Prints "Hello InfoQ" in ASCII art.
 //
+// Library: https://github.com/lalyos/jfiglet
+//
 // Usage:
 //   jbang hello.java
 

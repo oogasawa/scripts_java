@@ -4,6 +4,8 @@
 // JBang shortcut for autonomous-mirror.
 // Mirrors Git repositories autonomously.
 //
+// Project: com.github.oogasawa:autonomous-mirror
+//
 // Usage:
 //   jbang autonomous-mirror.java [args...]
 
