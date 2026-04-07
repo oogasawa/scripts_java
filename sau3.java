@@ -1,20 +1,11 @@
-///usr/bin/env jbang "$0" "$@" ; exit $?
-
-// JBang shortcut for Utility-sau3.
-// Loads ~/works/Utility-sau3/target/Utility-sau3-2.1.0.jar at runtime.
-// SAU3 (Sequence Analysis Utilities 3) for bioinformatics sequence processing.
-//
-// Project: https://github.com/oogasawa/Utility-sau3
-//
-// Usage:
-//   jbang sau3.java [args...]
+//usr/bin/env jbang "$0" "$@" ; exit $?
 
 import java.io.File;
 import java.net.URLClassLoader;
 
 class sau3 {
 
-  static String fatJar = "/works/Utility-sau3/target/Utility-sau3-2.1.0.jar";
+  static String fatJar = "/.m2/repository/com/scivicslab/Utility-sau3/1.1.0/Utility-sau3-1.1.0.jar";
 
   public static void main(String[] args) throws Exception {
     // Get the user's home directory from Java system properties
@@ -32,8 +23,7 @@ class sau3 {
     );
 
     // Load the class and invoke the main method
-    Class<?> appClass = classLoader.loadClass("com.github.oogasawa.utility.sau3.App");
+    Class<?> appClass = classLoader.loadClass("com.scivicslab.utility.sau3.App");
     appClass.getMethod("main", String[].class).invoke(null, (Object) args);
   }
 }
-
