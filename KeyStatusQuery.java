@@ -106,7 +106,7 @@ public class KeyStatusQuery {
             if (loanDate == null) continue;
             result.computeIfAbsent(col(c, 0), k -> new ArrayList<>())
                   .add(new LoanEvent(col(c, 0), col(c, 1), col(c, 2),
-                          col(c, 3), col(c, 5), col(c, 8),
+                          col(c, 3), col(c, 5), col(c, 9),
                           loanDate, parseDate(col(c, 7))));
         }
         return result;
