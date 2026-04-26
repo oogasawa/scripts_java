@@ -11,25 +11,46 @@ import java.util.*;
  * ── Usage ──────────────────────────────────────────────────────────────
  *
  * Linux / macOS:
- *   cd ~/Downloads
  *   java -cp ~/works KeyStatusQuery 2024-03-31
  *
  *   # with explicit file paths:
  *   java -cp ~/works KeyStatusQuery 2024-03-31 \
- *       ~/Downloads/鍵マスター.tsv ~/Downloads/貸出履歴.tsv
+ *       ~/Downloads/"【C-37】鍵管理簿.xlsx - 鍵マスター.tsv" \
+ *       ~/Downloads/"【C-37】鍵管理簿.xlsx - 貸出履歴.tsv"
  *
  * Windows PowerShell:
- *   cd ~\Downloads
  *   java -cp ~\works KeyStatusQuery 2024-03-31
  *
  *   # with explicit file paths:
  *   java -cp ~\works KeyStatusQuery 2024-03-31 `
- *       "~\Downloads\鍵マスター.tsv" "~\Downloads\貸出履歴.tsv"
+ *       "~\Downloads\【C-37】鍵管理簿.xlsx - 鍵マスター.tsv" `
+ *       "~\Downloads\【C-37】鍵管理簿.xlsx - 貸出履歴.tsv"
  *
  * Arguments:
  *   date        yyyy-MM-dd  (e.g. 2024-03-31)  required
- *   master-tsv  default: ./鍵マスター.tsv
- *   history-tsv default: ./貸出履歴.tsv
+ *   master-tsv  default: ~/Downloads/【C-37】鍵管理簿.xlsx - 鍵マスター.tsv
+ *   history-tsv default: ~/Downloads/【C-37】鍵管理簿.xlsx - 貸出履歴.tsv
+ *
+ * ── 入力ファイルのフォーマット ────────────────────────────────────────
+ *
+ * 【鍵マスター.tsv】  1行目はヘッダー（読み飛ばし）
+ *   col 0  鍵ID          一意な識別子（例: A-1, M-003）
+ *   col 1  種類          鍵の種類（例: 共用, 個人）
+ *   col 2  番号          通し番号・刻印番号など
+ *   col 3  説明          鍵の用途・場所の説明
+ *   col 4  保管場所      返却時の保管先
+ *   col 5  属性          補足属性（任意）
+ *
+ * 【貸出履歴.tsv】  1行目はヘッダー（読み飛ばし）
+ *   col 0  鍵ID          鍵マスターの鍵IDに対応
+ *   col 1  借用者名      鍵を借りた人の氏名
+ *   col 2  組織          借用者の所属組織
+ *   col 3  役職          借用者の役職（個人鍵の場合）
+ *   col 4  （未使用）
+ *   col 5  貸出日        フォーマット: yyyy/MM/dd
+ *   col 6  返却日        フォーマット: yyyy/MM/dd（未返却の場合は空欄）
+ *   col 7  （未使用）
+ *   col 8  作業内容      貸出目的・作業の説明
  *
  * ── BOM (Byte Order Mark) について ────────────────────────────────────
  *
@@ -55,9 +76,8 @@ public class KeyStatusQuery {
             String id,
             String person,
             String org,
-            String role,           // 役職 (personal keys)
-            String custodian,      // 委託担当者 (physical keys)
-            String work,           // 作業内容 (physical keys)
+            String role,           // 役職
+            String work,           // 作業内容
             LocalDate loanDate,
             LocalDate returnDate   // null = currently on loan
     ) {}
@@ -66,14 +86,15 @@ public class KeyStatusQuery {
         if (args.length < 1) {
             System.err.println("Usage: java KeyStatusQuery <date> [master-tsv] [history-tsv]");
             System.err.println("  date format: yyyy-MM-dd");
-            System.err.println("  master-tsv  default: ./鍵マスター.tsv");
-            System.err.println("  history-tsv default: ./貸出履歴.tsv");
+            System.err.println("  master-tsv  default: ~/Downloads/【C-37】鍵管理簿.xlsx - 鍵マスター.tsv");
+            System.err.println("  history-tsv default: ~/Downloads/【C-37】鍵管理簿.xlsx - 貸出履歴.tsv");
             System.exit(1);
         }
 
         LocalDate queryDate = LocalDate.parse(args[0]);
-        Path masterPath  = Path.of(args.length > 1 ? args[1] : "鍵マスター.tsv");
-        Path historyPath = Path.of(args.length > 2 ? args[2] : "貸出履歴.tsv");
+        String downloads = System.getProperty("user.home") + "/Downloads/";
+        Path masterPath  = Path.of(args.length > 1 ? args[1] : downloads + "【C-37】鍵管理簿.xlsx - 鍵マスター.tsv");
+        Path historyPath = Path.of(args.length > 2 ? args[2] : downloads + "【C-37】鍵管理簿.xlsx - 貸出履歴.tsv");
 
         Map<String, MasterKey>        masterKeys = loadMaster(masterPath);
         Map<String, List<LoanEvent>>  history    = loadHistory(historyPath);
@@ -102,12 +123,12 @@ public class KeyStatusQuery {
         for (int i = 1; i < lines.size(); i++) {
             String[] c = lines.get(i).split("\t", -1);
             if (c.length < 6 || col(c, 0).isEmpty()) continue;
-            LocalDate loanDate = parseDate(col(c, 6));
+            LocalDate loanDate = parseDate(col(c, 5));
             if (loanDate == null) continue;
             result.computeIfAbsent(col(c, 0), k -> new ArrayList<>())
                   .add(new LoanEvent(col(c, 0), col(c, 1), col(c, 2),
-                          col(c, 3), col(c, 5), col(c, 9),
-                          loanDate, parseDate(col(c, 7))));
+                          col(c, 3), col(c, 8),
+                          loanDate, parseDate(col(c, 6))));
         }
         return result;
     }
@@ -116,7 +137,7 @@ public class KeyStatusQuery {
                                     Map<String, List<LoanEvent>> history,
                                     LocalDate queryDate) {
         System.out.println(String.join("\t",
-                "鍵ID", "種類", "現在地", "貸出先", "状態", "貸出日", "返却日", "組織", "役職", "委託担当者", "作業内容"));
+                "鍵ID", "種類", "現在地", "貸出先", "状態", "貸出日", "返却日", "組織", "役職", "作業内容"));
 
         int activeCount = 0, returnedCount = 0, storedCount = 0;
 
@@ -136,7 +157,7 @@ public class KeyStatusQuery {
             if (active != null) {
                 printRow(key.id(), key.type(), active.person(), active.person(), "貸出中",
                         active.loanDate(), null,
-                        active.org(), active.role(), active.custodian(), active.work());
+                        active.org(), active.role(), active.work());
                 activeCount++;
                 continue;
             }
@@ -149,11 +170,11 @@ public class KeyStatusQuery {
             if (latest != null) {
                 printRow(key.id(), key.type(), latest.person(), key.storage(), "返却済",
                         latest.loanDate(), latest.returnDate(),
-                        latest.org(), latest.role(), latest.custodian(), latest.work());
+                        latest.org(), latest.role(), latest.work());
                 returnedCount++;
             } else {
                 printRow(key.id(), key.type(), "", key.storage(), "保管中",
-                        null, null, "", "", "", "");
+                        null, null, "", "", "");
                 storedCount++;
             }
         }
@@ -165,12 +186,12 @@ public class KeyStatusQuery {
 
     private static void printRow(String id, String type, String name, String location,
                                  String status, LocalDate loanDate, LocalDate returnDate,
-                                 String org, String role, String custodian, String work) {
+                                 String org, String role, String work) {
         System.out.println(String.join("\t",
                 id, type, location, name, status,
                 loanDate   != null ? loanDate.toString()   : "",
                 returnDate != null ? returnDate.toString() : "",
-                org, role, custodian, work));
+                org, role, work));
     }
 
     private static int naturalCompare(String a, String b) {
